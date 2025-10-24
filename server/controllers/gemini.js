@@ -13,14 +13,18 @@ exports.generate = async (req, res) => {
   console.log("[gemini controller] using model=", model);
 
   // Build Gemini API context
+  // Gemini expects roles: "user" and "model" only. Prepend systemPrompt as first user message.
   const contents = [];
   if (systemPrompt) {
-    contents.push({ role: "system", parts: [{ text: systemPrompt }] });
+    contents.push({ role: "user", parts: [{ text: systemPrompt }] });
   }
   if (Array.isArray(conversation)) {
     for (const msg of conversation) {
+      let role = msg.role;
+      if (role === "assistant") role = "model";
+      if (role === "system") role = "user";
       contents.push({
-        role: msg.role,
+        role,
         parts: [{ text: msg.content }],
       });
     }

@@ -366,14 +366,14 @@ export default function FileUploader({ onFilesChange }) {
   // Effect: notify parent when files change
   useEffect(() => {
     if (onFilesChange) onFilesChange(items.map((i) => i.file));
-  }, [items]);
+  }, [items, onFilesChange]);
 
   // Cleanup on unmount: revoke all object URLs
   useEffect(() => {
     return () => {
       items.forEach((it) => it.url && URL.revokeObjectURL(it.url));
     };
-  }, []);
+  }, [items]);
 
   // Drag events
   function onDragOver(e) {
